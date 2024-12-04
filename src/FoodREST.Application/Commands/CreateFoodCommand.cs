@@ -2,7 +2,7 @@
 using Ardalis.Result;
 using MediatR;
 
-namespace FoodREST.Application;
+namespace FoodREST.Application.Commands;
 
 public class CreateFoodCommand : IRequest<Result>
 {

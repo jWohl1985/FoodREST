@@ -1,6 +1,6 @@
 ﻿using FoodREST.Domain;
 
-namespace FoodREST.Application;
+namespace FoodREST.Application.Interfaces;
 
 public interface IFoodRepository
 {

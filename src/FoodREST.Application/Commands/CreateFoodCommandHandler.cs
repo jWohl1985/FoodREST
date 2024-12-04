@@ -1,8 +1,9 @@
 ﻿using Ardalis.Result;
+using FoodREST.Application.Interfaces;
 using FoodREST.Domain;
 using MediatR;
 
-namespace FoodREST.Application;
+namespace FoodREST.Application.Commands;
 
 public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Result>
 {

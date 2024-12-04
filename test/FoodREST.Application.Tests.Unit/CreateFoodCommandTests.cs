@@ -1,8 +1,5 @@
-﻿using Ardalis.Result;
-using FluentAssertions;
-using FoodREST.Domain;
-using MediatR;
-using NSubstitute;
+﻿using FluentAssertions;
+using FoodREST.Application.Commands;
 
 namespace FoodREST.Application.Tests.Unit;
 
