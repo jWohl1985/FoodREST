@@ -1,0 +1,6 @@
+@FoodREST.API_HostAddress = http://localhost:5131
+
+GET {{FoodREST.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
