@@ -1,11 +1,12 @@
 ﻿using Ardalis.Result;
 using FoodREST.Application.Interfaces;
+using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
 using MediatR;
 
 namespace FoodREST.Application.Commands;
 
-public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Result>
+public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Result<Food>>
 {
     private readonly IFoodRepository _foodRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,7 +17,7 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(CreateFoodCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Food>> Handle(CreateFoodCommand request, CancellationToken cancellationToken)
     {
         Food food = new(
             name: request.Name,
@@ -34,6 +35,6 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
 
         await _unitOfWork.SaveChangesAsync();
 
-        return Result.Success();
+        return food;
     }
 }

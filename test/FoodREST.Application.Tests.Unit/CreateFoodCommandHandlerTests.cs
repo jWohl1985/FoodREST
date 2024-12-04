@@ -33,7 +33,8 @@ public class CreateFoodCommandHandlerTests
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == "Banana"));
         await _unitOfWork.Received(1).SaveChangesAsync();
-        result.Should().BeEquivalentTo(Result.Success());
+        result.IsError().Should().BeFalse();
+        result.Value.Should().BeEquivalentTo(expectedFood, options => options.Excluding(o => o.Id));
     }
 
     [Fact]
@@ -50,6 +51,6 @@ public class CreateFoodCommandHandlerTests
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == "Banana"));
         await _unitOfWork.DidNotReceive().SaveChangesAsync();
-        result.Should().BeEquivalentTo(Result.Error());
+        result.IsError().Should().BeTrue();
     }
 }

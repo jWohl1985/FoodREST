@@ -1,10 +1,11 @@
 ﻿using Ardalis.GuardClauses;
 using Ardalis.Result;
+using FoodREST.Domain;
 using MediatR;
 
 namespace FoodREST.Application.Commands;
 
-public class CreateFoodCommand : IRequest<Result>
+public class CreateFoodCommand : IRequest<Result<Food>>
 {
     public CreateFoodCommand(string name, int calories, int proteinGrams, int carbohydrateGrams, int fatGrams)
     {

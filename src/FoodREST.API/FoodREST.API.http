@@ -1,6 +1,16 @@
-@FoodREST.API_HostAddress = http://localhost:5131
+@FoodREST.API_HostAddress = https://localhost:7154
 
-GET {{FoodREST.API_HostAddress}}/weatherforecast/
+### Create a food
+POST {{FoodREST.API_HostAddress}}/api/foods
 Accept: application/json
+Content-Type: application/json
+
+{
+  "Name":"Banana",
+  "Calories":"110",
+  "ProteinGrams":"2",
+  "CarbohydrateGrams":"27",
+  "FatGrams":"0"
+}
 
 ###
