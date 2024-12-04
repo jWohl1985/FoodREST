@@ -9,5 +9,6 @@ public static class ApiEndpoints
         private const string Base = $"{ApiBase}/foods";
 
         public const string Create = Base;
+        public const string Get = $"{ApiBase}/foods/{{id:guid}}";
     }
 }

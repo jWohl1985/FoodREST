@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
+using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class FoodController : ControllerBase
     }
 
     [HttpPost(ApiEndpoints.Foods.Create)]
-    public async Task<IActionResult> Create([FromBody]CreateFoodRequest request)
+    public async Task<IActionResult> Create([FromBody]CreateFoodRequest request, CancellationToken token)
     {
         var command = new CreateFoodCommand(
             name: request.Name,
@@ -27,10 +28,27 @@ public class FoodController : ControllerBase
             carbohydrateGrams: request.CarbohydrateGrams,
             fatGrams: request.FatGrams);
 
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, token);
 
         return result.IsError()
             ? BadRequest()
+            : Ok(result.Value.MapToResponse());
+    }
+
+    [HttpGet(ApiEndpoints.Foods.Get)]
+    public async Task<IActionResult> Get([FromRoute] string id, CancellationToken token)
+    {
+        if (!Guid.TryParse(id, out Guid guid))
+        {
+            return BadRequest();
+        }
+
+        var query = new GetFoodQuery() { Id = guid };
+
+        var result = await _mediator.Send(query, token);
+
+        return result.IsNotFound()
+            ? NotFound()
             : Ok(result.Value.MapToResponse());
     }
 }

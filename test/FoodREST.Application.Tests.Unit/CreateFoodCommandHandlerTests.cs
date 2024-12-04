@@ -20,7 +20,7 @@ public class CreateFoodCommandHandlerTests
     }
 
     [Fact]
-    public async void Handle_ShouldReturnSuccess_WhenRequestIsValid()
+    public async Task Handle_ShouldReturnSuccess_WhenRequestIsValid()
     {
         // Arrange
         var command = new CreateFoodCommand("Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
@@ -38,7 +38,7 @@ public class CreateFoodCommandHandlerTests
     }
 
     [Fact]
-    public async void Handle_ShouldReturnError_WhenRequestFails()
+    public async Task Handle_ShouldReturnError_WhenRequestFails()
     {
         // Arrange
         var command = new CreateFoodCommand("Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);

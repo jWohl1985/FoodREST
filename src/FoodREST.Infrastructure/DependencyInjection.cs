@@ -8,8 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<IFoodRepository, InMemoryFoodRepository>();
-        services.AddScoped<IUnitOfWork, FakeUnitOfWork>();
+        services.AddSingleton<IFoodRepository, InMemoryFoodRepository>();
+        services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
 
         return services;
     }
