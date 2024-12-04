@@ -7,4 +7,6 @@ public interface IFoodRepository
     Task<bool> AddFoodAsync(Food food);
 
     Task<Food?> GetByIdAsync(Guid id);
+
+    Task<IEnumerable<Food>> GetAllAsync();
 }

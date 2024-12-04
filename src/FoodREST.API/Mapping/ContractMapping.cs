@@ -1,5 +1,6 @@
 ﻿using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace FoodREST.API.Mapping;
 
@@ -15,6 +16,14 @@ public static class ContractMapping
             ProteinGrams = food.ProteinGrams,
             CarbohydrateGrams = food.CarbohydrateGrams,
             FatGrams = food.FatGrams,
+        };
+    }
+
+    public static FoodsResponse MapToResponse(this IEnumerable<Food> foods)
+    {
+        return new FoodsResponse()
+        {
+            Items = foods.Select(MapToResponse)
         };
     }
 }

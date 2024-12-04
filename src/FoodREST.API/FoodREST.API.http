@@ -14,4 +14,8 @@ Content-Type: application/json
 }
 
 ###
-GET {{FoodREST.API_HostAddress}}/api/foods/a32d589e-96d7-4485-8ce9-682149691a0c
+GET {{FoodREST.API_HostAddress}}/api/foods/bfa9f0b9-c8d5-430d-9e7a-21b1991c5494
+
+###
+GET {{FoodREST.API_HostAddress}}/api/foods
+Accept: application/json

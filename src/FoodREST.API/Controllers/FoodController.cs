@@ -3,6 +3,7 @@ using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
+using FoodREST.Contracts.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,5 +51,15 @@ public class FoodController : ControllerBase
         return result.IsNotFound()
             ? NotFound()
             : Ok(result.Value.MapToResponse());
+    }
+
+    [HttpGet(ApiEndpoints.Foods.GetAll)]
+    public async Task<IActionResult> GetAll(CancellationToken token)
+    {
+        var query = new GetAllFoodsQuery();
+
+        var result = await _mediator.Send(query, token);
+
+        return Ok(result.MapToResponse());
     }
 }
