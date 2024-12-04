@@ -13,9 +13,13 @@ Content-Type: application/json
   "FatGrams":"0"
 }
 
-###
+### Get a food
 GET {{FoodREST.API_HostAddress}}/api/foods/bfa9f0b9-c8d5-430d-9e7a-21b1991c5494
 
-###
+### Get all foods
 GET {{FoodREST.API_HostAddress}}/api/foods
+Accept: application/json
+
+### Delete a food
+DELETE {{FoodREST.API_HostAddress}}/api/foods/a796c1c8-25a1-4bc1-ac12-14587d1b5581
 Accept: application/json

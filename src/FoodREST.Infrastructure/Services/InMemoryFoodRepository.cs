@@ -23,4 +23,17 @@ public class InMemoryFoodRepository : IFoodRepository
     {
         return Task.FromResult(_foods.AsEnumerable());
     }
+
+    public async Task<bool> DeleteFoodAsync(Guid id)
+    {
+        Food? food = _foods.FirstOrDefault(f => f.Id == id);
+
+        if (food is null)
+        {
+            return await Task.FromResult(false);
+        }
+
+        _foods.Remove(food);
+        return await Task.FromResult(true);
+    }
 }

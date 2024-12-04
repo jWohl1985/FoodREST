@@ -9,4 +9,6 @@ public interface IFoodRepository
     Task<Food?> GetByIdAsync(Guid id);
 
     Task<IEnumerable<Food>> GetAllAsync();
+
+    Task<bool> DeleteFoodAsync(Guid id);
 }

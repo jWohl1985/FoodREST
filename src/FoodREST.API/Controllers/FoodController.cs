@@ -3,7 +3,6 @@ using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
-using FoodREST.Contracts.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,5 +60,17 @@ public class FoodController : ControllerBase
         var result = await _mediator.Send(query, token);
 
         return Ok(result.MapToResponse());
+    }
+
+    [HttpDelete(ApiEndpoints.Foods.Delete)]
+    public async Task<IActionResult> Delete([FromRoute]Guid id, CancellationToken token)
+    {
+        var command = new DeleteFoodCommand() { Id = id };
+
+        var result = await _mediator.Send(command, token);
+
+        return result.IsNotFound()
+            ? NotFound()
+            : Ok();
     }
 }
