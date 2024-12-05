@@ -9,80 +9,39 @@ public class FoodTests
     public void Id_ShouldNotBeEmpty()
     {
         // Arrange
-        var food = new Food(Guid.NewGuid(), "Banana", 0, 0, 0, 0);
+        var food = new Food(null, "Banana", 0, 0, 0, 0);
 
         // Act
         var result = food.Id;
 
         // Assert
         result.Should().NotBeEmpty();
+        Guid.TryParse(result.ToString(), out Guid _).Should().BeTrue();
     }
 
-    [Fact]
-    public void Name_ShouldNotBeNull()  
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void Name_ShouldNotBeNullOrEmpty(string name)  
     {
         // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: null!, 0, 0, 0, 0);
+        var food = () => new Food(Guid.NewGuid(), name, 0, 0, 0, 0);
 
         // Act
 
         // Assert
-        food.Should().ThrowExactly<ArgumentNullException>();
+        food.Should().Throw<ArgumentException>();
     }
 
-    [Fact]
-    public void Name_CannotBeEmpty()
+    [Theory]
+    [InlineData(-5, 10, 10, 10)]
+    [InlineData(10, -30, 10, 10)]
+    [InlineData(10, 10, -100, 10)]
+    [InlineData(5, 5, 5, -3)]
+    public void NutritionInfo_ShouldNotBeNegative(int calories, int protein, int carbs, int fat)
     {
         // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: "", 0, 0, 0, 0);
-
-        // Act
-
-        // Assert
-        food.Should().ThrowExactly<ArgumentException>();
-    }
-
-    [Fact]
-    public void Calories_ShouldNotBeNegative()
-    {
-        // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: "Banana", calories: -15, 0, 0, 0);
-
-        // Act
-
-        // Assert
-        food.Should().ThrowExactly<ArgumentException>();
-    }
-
-    [Fact]
-    public void ProteinGrams_ShouldNotBeNegative()
-    {
-        // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, proteinGrams: -1, 0, 0);
-
-        // Act
-
-        // Assert
-        food.Should().ThrowExactly<ArgumentException>();
-    }
-
-    [Fact]
-    public void CarbohydrateGrams_ShouldNotBeNegative()
-    {
-        // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, 0, carbohydrateGrams: -1, 0);
-
-        // Act
-
-        // Assert
-        food.Should().ThrowExactly<ArgumentException>();
-    }
-
-    [Fact]
-    public void FatGrams_ShouldNotBeNegative()
-    {
-        // Arrange
-        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, 0, 0, fatGrams: -1);
+        var food = () => new Food(Guid.NewGuid(), "Test", calories, protein, carbs, fat);
 
         // Act
 
