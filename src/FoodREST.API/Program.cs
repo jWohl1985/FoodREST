@@ -1,3 +1,4 @@
+using FoodREST.API.Mapping;
 using FoodREST.Application;
 using FoodREST.Infrastructure;
 
@@ -21,6 +22,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();
 

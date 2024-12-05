@@ -3,6 +3,7 @@ using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
+using FoodREST.Contracts.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,12 @@ public class FoodController : ControllerBase
             fatGrams: request.FatGrams);
 
         var result = await _mediator.Send(command, token);
+
+        if (result.IsInvalid())
+        {
+            ValidationFailureResponse response = result.ValidationErrors.MapToResponse();
+            return BadRequest(response);
+        }
 
         return result.IsError()
             ? BadRequest()
@@ -61,12 +68,19 @@ public class FoodController : ControllerBase
     public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]UpdateFoodRequest request, CancellationToken token)
     {
         var command = new UpdateFoodCommand(id, 
-            request.Name, request.Calories, 
+            request.Name, 
+            request.Calories, 
             request.ProteinGrams, 
             request.CarbohydrateGrams, 
             request.FatGrams);
 
         var result = await _mediator.Send(command, token);
+
+        if (result.IsInvalid())
+        {
+            ValidationFailureResponse response = result.ValidationErrors.MapToResponse();
+            return BadRequest(response);
+        }
 
         return result.IsNotFound()
             ? NotFound()

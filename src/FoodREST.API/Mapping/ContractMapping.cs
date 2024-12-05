@@ -1,4 +1,5 @@
-﻿using FoodREST.Contracts.Responses;
+﻿using Ardalis.Result;
+using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
 using Microsoft.AspNetCore.Http.Features;
 
@@ -24,6 +25,20 @@ public static class ContractMapping
         return new FoodsResponse()
         {
             Items = foods.Select(MapToResponse)
+        };
+    }
+
+    public static ValidationFailureResponse MapToResponse(this IEnumerable<ValidationError> errors)
+    {
+        IEnumerable<ValidationResponse> responses = errors.Select(e => new ValidationResponse()
+        {
+            PropertyName = e.Identifier,
+            Message = e.ErrorMessage,
+        });
+
+        return new ValidationFailureResponse()
+        {
+            Errors = responses,
         };
     }
 }
