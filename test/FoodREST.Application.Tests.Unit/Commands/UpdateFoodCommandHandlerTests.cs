@@ -24,7 +24,7 @@ public class UpdateFoodCommandHandlerTests
     public UpdateFoodCommandHandlerTests()
     {
         _command = new UpdateFoodCommand(Guid.NewGuid(), "Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
-        _updatedFood = new Food(_command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams, _command.Id);
+        _updatedFood = new Food(_command.Id, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
         _sut = new UpdateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
     }
 

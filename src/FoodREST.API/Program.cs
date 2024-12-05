@@ -1,15 +1,17 @@
 using FoodREST.API.Mapping;
 using FoodREST.Application;
 using FoodREST.Infrastructure;
+using FoodREST.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services
-    .AddInfrastructure()
+    .AddInfrastructure(config)
     .AddApplication();
 
 var app = builder.Build();
@@ -26,5 +28,8 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();
+
+var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
+await dbInitializer.InitializeAsync();
 
 app.Run();

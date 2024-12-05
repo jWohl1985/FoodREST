@@ -21,8 +21,8 @@ public class CreateFoodCommandHandlerTests
 
     public CreateFoodCommandHandlerTests()
     {
-        _command = new CreateFoodCommand("Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
-        _expectedFood = new Food(_command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams, null);
+        _command = new CreateFoodCommand(name: "Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
+        _expectedFood = new Food(null, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
         _sut = new CreateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
     }
 

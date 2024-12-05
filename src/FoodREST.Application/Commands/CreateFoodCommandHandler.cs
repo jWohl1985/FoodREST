@@ -44,7 +44,8 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
             calories: request.Calories,
             proteinGrams: request.ProteinGrams,
             carbohydrateGrams: request.CarbohydrateGrams,
-            fatGrams: request.FatGrams);
+            fatGrams: request.FatGrams,
+            id: Guid.NewGuid());
 
         bool success = await _foodRepository.AddFoodAsync(food);
 

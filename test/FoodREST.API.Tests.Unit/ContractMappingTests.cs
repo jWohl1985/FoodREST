@@ -11,7 +11,7 @@ public class ContractMappingTests
     public void Food_ShouldMapToFoodResponseCorrectly()
     {
         // Arrange
-        Food food = new("Banana", 110, 2, 27, 0);
+        Food food = new(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
 
         FoodResponse expectedResponse = new()
         {
@@ -34,8 +34,8 @@ public class ContractMappingTests
     public void IEnumerableFoods_ShouldMapToFoodsResponseCorrectly()
     {
         // Arrange
-        Food banana = new("Banana", 110, 2, 27, 0);
-        Food beefJerky = new("Beef Jerky", 80, 15, 5, 0);
+        Food banana = new(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
+        Food beefJerky = new(Guid.NewGuid(), "Beef Jerky", 80, 15, 5, 0);
         List<Food> foods = [banana, beefJerky];
 
         FoodsResponse expectedResponse = new()

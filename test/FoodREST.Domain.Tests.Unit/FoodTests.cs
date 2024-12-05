@@ -9,7 +9,7 @@ public class FoodTests
     public void Id_ShouldNotBeEmpty()
     {
         // Arrange
-        var food = new Food(name: "Banana");
+        var food = new Food(Guid.NewGuid(), "Banana", 0, 0, 0, 0);
 
         // Act
         var result = food.Id;
@@ -19,10 +19,10 @@ public class FoodTests
     }
 
     [Fact]
-    public void Name_ShouldNotBeNull()
+    public void Name_ShouldNotBeNull()  
     {
         // Arrange
-        var food = () => new Food(name: null!);
+        var food = () => new Food(Guid.NewGuid(), name: null!, 0, 0, 0, 0);
 
         // Act
 
@@ -34,7 +34,7 @@ public class FoodTests
     public void Name_CannotBeEmpty()
     {
         // Arrange
-        var food = () => new Food(name: "");
+        var food = () => new Food(Guid.NewGuid(), name: "", 0, 0, 0, 0);
 
         // Act
 
@@ -46,7 +46,7 @@ public class FoodTests
     public void Calories_ShouldNotBeNegative()
     {
         // Arrange
-        var food = () => new Food(name: "Banana", calories: -15);
+        var food = () => new Food(Guid.NewGuid(), name: "Banana", calories: -15, 0, 0, 0);
 
         // Act
 
@@ -58,7 +58,7 @@ public class FoodTests
     public void ProteinGrams_ShouldNotBeNegative()
     {
         // Arrange
-        var food = () => new Food(name: "Banana", proteinGrams: -1);
+        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, proteinGrams: -1, 0, 0);
 
         // Act
 
@@ -70,7 +70,7 @@ public class FoodTests
     public void CarbohydrateGrams_ShouldNotBeNegative()
     {
         // Arrange
-        var food = () => new Food(name: "Banana", carbohydrateGrams: -1);
+        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, 0, carbohydrateGrams: -1, 0);
 
         // Act
 
@@ -82,26 +82,11 @@ public class FoodTests
     public void FatGrams_ShouldNotBeNegative()
     {
         // Arrange
-        var food = () => new Food(name: "Banana", fatGrams: -1);
+        var food = () => new Food(Guid.NewGuid(), name: "Banana", 0, 0, 0, fatGrams: -1);
 
         // Act
 
         // Assert
         food.Should().ThrowExactly<ArgumentException>();
-    }
-
-    [Fact]
-    public void NutritionInfo_ShouldDefaultToZero_WhenNotSupplied()
-    {
-        // Arrange
-        var food = new Food(name: "Banana");
-
-        // Act
-
-        // Assert
-        food.Calories.Should().Be(0);
-        food.ProteinGrams.Should().Be(0);
-        food.CarbohydrateGrams.Should().Be(0);
-        food.FatGrams.Should().Be(0);
     }
 }

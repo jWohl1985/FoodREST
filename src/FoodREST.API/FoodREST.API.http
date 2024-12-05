@@ -14,14 +14,14 @@ Content-Type: application/json
 }
 
 ### Get a food
-GET {{FoodREST.API_HostAddress}}/api/foods/2fab54d1-1606-4a1b-8f17-b60f68d3669f
+GET {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
 
 ### Get all foods
 GET {{FoodREST.API_HostAddress}}/api/foods
 Accept: application/json
 
 ### Update a food
-PUT {{FoodREST.API_HostAddress}}/api/foods/15f7c43d-6f61-4d69-934f-0408e9b68aae
+PUT {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
 Accept: application/json
 Content-Type: application/json
 
@@ -35,5 +35,5 @@ Content-Type: application/json
 
 
 ### Delete a food
-DELETE {{FoodREST.API_HostAddress}}/api/foods/2fab54d1-1606-4a1b-8f17-b60f68d3669f
+DELETE {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
 Accept: application/json

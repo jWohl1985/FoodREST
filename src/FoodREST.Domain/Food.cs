@@ -5,12 +5,12 @@ namespace FoodREST.Domain;
 public sealed class Food
 {
     public Food(
+        Guid? id,
         string name, 
-        int calories = 0, 
-        int proteinGrams = 0, 
-        int carbohydrateGrams = 0, 
-        int fatGrams = 0,
-        Guid? id = null)
+        int calories, 
+        int proteinGrams, 
+        int carbohydrateGrams, 
+        int fatGrams)
     {
         Id = id ?? Guid.NewGuid();
         Name = Guard.Against.NullOrEmpty(name);
@@ -22,7 +22,7 @@ public sealed class Food
 
     public Guid Id { get; private set; }
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
 
     public int Calories { get; private set; }
 

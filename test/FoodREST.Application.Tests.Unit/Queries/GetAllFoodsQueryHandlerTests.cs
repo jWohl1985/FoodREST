@@ -11,7 +11,7 @@ public class GetAllFoodsQueryHandlerTests
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
 
     private GetAllFoodsQueryHandler _sut;
-    private Food _banana = new Food("Banana", 110, 2, 27, 0, Guid.NewGuid());
+    private Food _banana = new Food(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
 
     public GetAllFoodsQueryHandlerTests()
     {

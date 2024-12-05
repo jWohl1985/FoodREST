@@ -26,7 +26,7 @@ public class GetFoodQueryHandlerTests
     {
         // Arrange
         var query = new GetFoodQuery() { Id = guid };
-        var banana = new Food("Banana", 110, 2, 27, 0);
+        var banana = new Food(guid, "Banana", 110, 2, 27, 0);
 
         _foodRepository.GetByIdAsync(guid).Returns(banana);
 
