@@ -4,13 +4,14 @@ using FoodREST.Application.Queries;
 using FoodREST.Domain;
 using NSubstitute;
 
-namespace FoodREST.Application.Tests.Unit;
+namespace FoodREST.Application.Tests.Unit.Queries;
 
 public class GetAllFoodsQueryHandlerTests
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
 
     private GetAllFoodsQueryHandler _sut;
+    private Food _banana = new Food("Banana", 110, 2, 27, 0, Guid.NewGuid());
 
     public GetAllFoodsQueryHandlerTests()
     {
@@ -22,8 +23,7 @@ public class GetAllFoodsQueryHandlerTests
     {
         // Arrange
         var query = new GetAllFoodsQuery();
-        var banana = new Food("Banana", 110, 2, 27, 0);
-        List<Food> foods = [banana];
+        List<Food> foods = [_banana];
         _foodRepository.GetAllAsync().Returns(foods);
 
         // Act

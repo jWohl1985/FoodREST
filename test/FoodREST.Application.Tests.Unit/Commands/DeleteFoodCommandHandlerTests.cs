@@ -4,7 +4,7 @@ using FoodREST.Application.Commands;
 using FoodREST.Application.Interfaces;
 using NSubstitute;
 
-namespace FoodREST.Application.Tests.Unit;
+namespace FoodREST.Application.Tests.Unit.Commands;
 
 public class DeleteFoodCommandHandlerTests
 {

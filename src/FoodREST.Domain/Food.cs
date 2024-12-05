@@ -4,13 +4,15 @@ namespace FoodREST.Domain;
 
 public sealed class Food
 {
-    public Food(string name, 
+    public Food(
+        string name, 
         int calories = 0, 
         int proteinGrams = 0, 
         int carbohydrateGrams = 0, 
-        int fatGrams = 0)
+        int fatGrams = 0,
+        Guid? id = null)
     {
-        Id = Guid.NewGuid();
+        Id = id ?? Guid.NewGuid();
         Name = Guard.Against.NullOrEmpty(name);
         Calories = Guard.Against.Negative(calories);
         ProteinGrams = Guard.Against.Negative(proteinGrams);

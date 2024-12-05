@@ -7,21 +7,36 @@ public class InMemoryFoodRepository : IFoodRepository
 {
     private List<Food> _foods = new();
 
-    public Task<bool> AddFoodAsync(Food food)
+    public async Task<bool> AddFoodAsync(Food food)
     {
         _foods.Add(food);
-        return Task.FromResult(true);
+        return await Task.FromResult(true);
     }
 
-    public Task<Food?> GetByIdAsync(Guid id)
+    public async Task<Food?> GetByIdAsync(Guid id)
     {
         Food? food = _foods.FirstOrDefault(f => f.Id == id);
-        return Task.FromResult(food); 
+        return await Task.FromResult(food); 
     }
 
-    public Task<IEnumerable<Food>> GetAllAsync()
+    public async Task<IEnumerable<Food>> GetAllAsync()
     {
-        return Task.FromResult(_foods.AsEnumerable());
+        return await Task.FromResult(_foods.AsEnumerable());
+    }
+
+    public async Task<Food?> UpdateFoodAsync(Guid id, Food food)
+    {
+        Food? existingFood = _foods.FirstOrDefault(f => f.Id == id);
+
+        if (existingFood is null)
+        {
+            return null;
+        }
+
+        _foods.Remove(existingFood);
+        _foods.Add(food);
+
+        return await Task.FromResult(food);
     }
 
     public async Task<bool> DeleteFoodAsync(Guid id)

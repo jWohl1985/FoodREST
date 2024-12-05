@@ -14,12 +14,26 @@ Content-Type: application/json
 }
 
 ### Get a food
-GET {{FoodREST.API_HostAddress}}/api/foods/bfa9f0b9-c8d5-430d-9e7a-21b1991c5494
+GET {{FoodREST.API_HostAddress}}/api/foods/2fab54d1-1606-4a1b-8f17-b60f68d3669f
 
 ### Get all foods
 GET {{FoodREST.API_HostAddress}}/api/foods
 Accept: application/json
 
+### Update a food
+PUT {{FoodREST.API_HostAddress}}/api/foods/2fab54d1-1606-4a1b-8f17-b60f68d3669f
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name":"Apple",
+  "Calories":"95",
+  "ProteinGrams":"1",
+  "CarbohydrateGrams":"30",
+  "FatGrams":"0"
+}
+
+
 ### Delete a food
-DELETE {{FoodREST.API_HostAddress}}/api/foods/a796c1c8-25a1-4bc1-ac12-14587d1b5581
+DELETE {{FoodREST.API_HostAddress}}/api/foods/2fab54d1-1606-4a1b-8f17-b60f68d3669f
 Accept: application/json

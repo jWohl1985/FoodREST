@@ -36,14 +36,9 @@ public class FoodController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Foods.Get)]
-    public async Task<IActionResult> Get([FromRoute] string id, CancellationToken token)
+    public async Task<IActionResult> Get([FromRoute]Guid id, CancellationToken token)
     {
-        if (!Guid.TryParse(id, out Guid guid))
-        {
-            return BadRequest();
-        }
-
-        var query = new GetFoodQuery() { Id = guid };
+        var query = new GetFoodQuery() { Id = id };
 
         var result = await _mediator.Send(query, token);
 
@@ -60,6 +55,22 @@ public class FoodController : ControllerBase
         var result = await _mediator.Send(query, token);
 
         return Ok(result.MapToResponse());
+    }
+
+    [HttpPut(ApiEndpoints.Foods.Update)]
+    public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]UpdateFoodRequest request, CancellationToken token)
+    {
+        var command = new UpdateFoodCommand(id, 
+            request.Name, request.Calories, 
+            request.ProteinGrams, 
+            request.CarbohydrateGrams, 
+            request.FatGrams);
+
+        var result = await _mediator.Send(command, token);
+
+        return result.IsNotFound()
+            ? NotFound()
+            : Ok(result.Value.MapToResponse());
     }
 
     [HttpDelete(ApiEndpoints.Foods.Delete)]

@@ -6,7 +6,7 @@ using FoodREST.Domain;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace FoodREST.Application.Tests.Unit;
+namespace FoodREST.Application.Tests.Unit.Queries;
 
 public class GetFoodQueryHandlerTests
 {
