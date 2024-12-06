@@ -47,7 +47,7 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
             fatGrams: request.FatGrams,
             id: Guid.NewGuid());
 
-        bool success = await _foodRepository.AddFoodAsync(food);
+        bool success = await _foodRepository.AddFoodAsync(food, cancellationToken);
 
         if (!success)
         {

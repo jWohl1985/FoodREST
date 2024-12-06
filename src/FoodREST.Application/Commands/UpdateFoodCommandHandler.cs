@@ -47,7 +47,7 @@ public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Resul
             fatGrams: request.FatGrams,
             id: request.Id);
 
-        var result = await _foodRepository.UpdateFoodAsync(request.Id, newFood);
+        var result = await _foodRepository.UpdateFoodAsync(request.Id, newFood, cancellationToken);
 
         if (result is null)
         {

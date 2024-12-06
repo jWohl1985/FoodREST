@@ -17,7 +17,7 @@ public class DeleteFoodCommandHandler : IRequestHandler<DeleteFoodCommand, Resul
 
     public async Task<Result> Handle(DeleteFoodCommand request, CancellationToken cancellationToken)
     {
-        bool success = await _foodRepository.DeleteFoodAsync(request.Id);
+        bool success = await _foodRepository.DeleteFoodAsync(request.Id, cancellationToken);
 
         if (!success)
         {

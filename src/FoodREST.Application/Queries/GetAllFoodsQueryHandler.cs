@@ -15,7 +15,7 @@ public class GetAllFoodsQueryHandler : IRequestHandler<GetAllFoodsQuery, IEnumer
 
     public async Task<IEnumerable<Food>> Handle(GetAllFoodsQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<Food> foods = await _foodRepository.GetAllAsync();
+        IEnumerable<Food> foods = await _foodRepository.GetAllAsync(cancellationToken);
 
         return foods;
     }

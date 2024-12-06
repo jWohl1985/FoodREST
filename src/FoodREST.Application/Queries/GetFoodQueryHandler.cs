@@ -16,7 +16,7 @@ public class GetFoodQueryHandler : IRequestHandler<GetFoodQuery, Result<Food>>
 
     public async Task<Result<Food>> Handle(GetFoodQuery request, CancellationToken cancellationToken)
     {
-        Food? food = await _foodRepository.GetByIdAsync(request.Id);
+        Food? food = await _foodRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (food is null)
         {
