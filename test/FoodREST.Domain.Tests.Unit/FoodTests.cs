@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System.Reflection;
 
 namespace FoodREST.Domain.Tests.Unit;
 
@@ -35,7 +34,7 @@ public class FoodTests
 
     [Theory]
     [InlineData(-5, 10, 10, 10)]
-    [InlineData(10, -30, 10, 10)]
+    [InlineData(10, -30, 10, 10)] 
     [InlineData(10, 10, -100, 10)]
     [InlineData(5, 5, 5, -3)]
     public void NutritionInfo_ShouldNotBeNegative(int calories, int protein, int carbs, int fat)

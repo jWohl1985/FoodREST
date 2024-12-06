@@ -10,21 +10,26 @@ using NSubstitute.ReturnsExtensions;
 
 namespace FoodREST.Application.Tests.Unit.Commands;
 
-public class UpdateFoodCommandHandlerTests
+public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<UpdateFoodCommand> _validator = Substitute.For<IValidator<UpdateFoodCommand>>();
 
     private UpdateFoodCommand _command;
-    private Food _updatedFood;
+    private Food _expectedFood;
     private UpdateFoodCommandHandler _sut;
     
 
-    public UpdateFoodCommandHandlerTests()
+    public UpdateFoodCommandHandlerTests(FoodFixture foodFixture)
     {
-        _command = new UpdateFoodCommand(Guid.NewGuid(), "Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
-        _updatedFood = new Food(_command.Id, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
+        Food beefJerky = foodFixture.BeefJerky;
+        Food banana = foodFixture.Banana;
+
+        // Update the beefJerky to have the banana info (use the beef jerky Id, but banana properties)
+        _command = new UpdateFoodCommand(beefJerky.Id, banana.Name, banana.Calories, banana.ProteinGrams, banana.CarbohydrateGrams, banana.FatGrams);
+        _expectedFood = new Food(_command.Id, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
+
         _sut = new UpdateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
     }
 
@@ -32,7 +37,7 @@ public class UpdateFoodCommandHandlerTests
     public async Task Handle_ShouldReturnSuccess_WhenRequestIsValid()
     {
         // Arrange
-        _foodRepository.UpdateFoodAsync(_command.Id, Arg.Any<Food>()).Returns(_updatedFood);
+        _foodRepository.UpdateFoodAsync(_command.Id, Arg.Any<Food>()).Returns(_expectedFood);
         _validator.ValidateAsync(_command).Returns(new ValidationResult() { Errors = [] });
 
         // Act
@@ -40,10 +45,10 @@ public class UpdateFoodCommandHandlerTests
 
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
-        await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _updatedFood.Name));
+        await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
         await _unitOfWork.Received(1).SaveChangesAsync();
         result.IsError().Should().BeFalse();
-        result.Value.Should().BeEquivalentTo(_updatedFood);
+        result.Value.Should().BeEquivalentTo(_expectedFood);
     }
 
     [Fact]
@@ -58,7 +63,7 @@ public class UpdateFoodCommandHandlerTests
 
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
-        await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _updatedFood.Name));
+        await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
         await _unitOfWork.DidNotReceive().SaveChangesAsync();
         result.IsNotFound().Should().BeTrue();
     }
@@ -67,10 +72,10 @@ public class UpdateFoodCommandHandlerTests
     public async Task Handle_ShouldReturnValidationError_WhenRequestIsInvalid()
     {
         // Arrange
-        var invalidCommand = new UpdateFoodCommand(Guid.NewGuid(), string.Empty, 15, 5, 1, 2);
+        var invalidCommand = new UpdateFoodCommand(_command.Id, string.Empty, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
         _foodRepository.UpdateFoodAsync(invalidCommand.Id, Arg.Any<Food>()).ReturnsNull();
         _validator.ValidateAsync(invalidCommand, default)
-            .Returns(new ValidationResult([ new ValidationFailure(propertyName: "Name", errorMessage: "Cannot be empty")]));
+            .Returns(new ValidationResult([ new ValidationFailure(propertyName: nameof(_command.Name), errorMessage: string.Empty)]));
 
         // Act
         var result = await _sut.Handle(invalidCommand, default);

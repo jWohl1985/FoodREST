@@ -5,26 +5,33 @@ using FoodREST.Domain;
 
 namespace FoodREST.API.Tests.Unit;
 
-public class ContractMappingTests
+public class ContractMappingTests : IClassFixture<FoodFixture>
 {
+    private Food _banana;
+    private Food _beefJerky;
+
+    public ContractMappingTests(FoodFixture foodFixture)
+    {
+        _banana = foodFixture.Banana;
+        _beefJerky = foodFixture.BeefJerky;
+    }
+
     [Fact]
     public void Food_ShouldMapToFoodResponseCorrectly()
     {
         // Arrange
-        Food food = new(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
-
         FoodResponse expectedResponse = new()
         {
-            Id = food.Id,
-            Name = food.Name,
-            Calories = food.Calories,
-            ProteinGrams = food.ProteinGrams,
-            CarbohydrateGrams = food.CarbohydrateGrams,
-            FatGrams = food.FatGrams,
+            Id = _banana.Id,
+            Name = _banana.Name,
+            Calories = _banana.Calories,
+            ProteinGrams = _banana.ProteinGrams,
+            CarbohydrateGrams = _banana.CarbohydrateGrams,
+            FatGrams = _banana.FatGrams,
         };
 
         // Act
-        var result = food.MapToResponse();
+        var result = _banana.MapToResponse();
 
         // Assert
         result.Should().BeEquivalentTo(expectedResponse);
@@ -34,9 +41,7 @@ public class ContractMappingTests
     public void IEnumerableFoods_ShouldMapToFoodsResponseCorrectly()
     {
         // Arrange
-        Food banana = new(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
-        Food beefJerky = new(Guid.NewGuid(), "Beef Jerky", 80, 15, 5, 0);
-        List<Food> foods = [banana, beefJerky];
+        List<Food> foods = [_banana, _beefJerky];
 
         FoodsResponse expectedResponse = new()
         {
@@ -44,21 +49,21 @@ public class ContractMappingTests
             { 
                 new FoodResponse()
                 {
-                    Id = banana.Id,
-                    Name = banana.Name,
-                    Calories = banana.Calories,
-                    ProteinGrams = banana.ProteinGrams,
-                    CarbohydrateGrams = banana.CarbohydrateGrams,
-                    FatGrams = banana.FatGrams,
+                    Id = _banana.Id,
+                    Name = _banana.Name,
+                    Calories = _banana.Calories,
+                    ProteinGrams = _banana.ProteinGrams,
+                    CarbohydrateGrams = _banana.CarbohydrateGrams,
+                    FatGrams = _banana.FatGrams,
                 },
                 new FoodResponse()
                 {
-                    Id = beefJerky.Id,
-                    Name = beefJerky.Name,
-                    Calories = beefJerky.Calories,
-                    ProteinGrams = beefJerky.ProteinGrams,
-                    CarbohydrateGrams = beefJerky.CarbohydrateGrams,
-                    FatGrams = beefJerky.FatGrams,
+                    Id = _beefJerky.Id,
+                    Name = _beefJerky.Name,
+                    Calories = _beefJerky.Calories,
+                    ProteinGrams = _beefJerky.ProteinGrams,
+                    CarbohydrateGrams = _beefJerky.CarbohydrateGrams,
+                    FatGrams = _beefJerky.FatGrams,
                 },
             }
         };

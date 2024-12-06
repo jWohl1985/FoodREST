@@ -6,15 +6,18 @@ using NSubstitute;
 
 namespace FoodREST.Application.Tests.Unit.Queries;
 
-public class GetAllFoodsQueryHandlerTests
+public class GetAllFoodsQueryHandlerTests : IClassFixture<FoodFixture>
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
 
     private GetAllFoodsQueryHandler _sut;
-    private Food _banana = new Food(Guid.NewGuid(), "Banana", 110, 2, 27, 0);
+    private Food _banana;
+    private Food _beefJerky;
 
-    public GetAllFoodsQueryHandlerTests()
+    public GetAllFoodsQueryHandlerTests(FoodFixture foodFixture)
     {
+        _banana = foodFixture.Banana;
+        _beefJerky = foodFixture.BeefJerky;
         _sut = new GetAllFoodsQueryHandler(_foodRepository);
     }
 
@@ -23,7 +26,7 @@ public class GetAllFoodsQueryHandlerTests
     {
         // Arrange
         var query = new GetAllFoodsQuery();
-        List<Food> foods = [_banana];
+        List<Food> foods = [_banana, _beefJerky];
         _foodRepository.GetAllAsync().Returns(foods);
 
         // Act

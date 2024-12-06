@@ -9,20 +9,20 @@ using NSubstitute;
 
 namespace FoodREST.Application.Tests.Unit.Commands;
 
-public class CreateFoodCommandHandlerTests
+public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<CreateFoodCommand> _validator = Substitute.For<IValidator<CreateFoodCommand>>();
 
+    private Food _banana;
     private CreateFoodCommand _command;
-    private Food _expectedFood;
     private CreateFoodCommandHandler _sut;
 
-    public CreateFoodCommandHandlerTests()
+    public CreateFoodCommandHandlerTests(FoodFixture foodFixture)
     {
-        _command = new CreateFoodCommand(name: "Banana", calories: 115, proteinGrams: 2, carbohydrateGrams: 27, fatGrams: 0);
-        _expectedFood = new Food(null, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
+        _banana = foodFixture.Banana;
+        _command = new CreateFoodCommand(_banana.Name, _banana.Calories, _banana.ProteinGrams, _banana.CarbohydrateGrams, _banana.FatGrams);
         _sut = new CreateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
     }
 
@@ -37,10 +37,10 @@ public class CreateFoodCommandHandlerTests
         var result = await _sut.Handle(_command, default);
 
         // Assert
-        await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == "Banana"));
+        await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
         await _unitOfWork.Received(1).SaveChangesAsync();
         result.IsError().Should().BeFalse();
-        result.Value.Should().BeEquivalentTo(_expectedFood, options => options.Excluding(o => o.Id));
+        result.Value.Should().BeEquivalentTo(_banana, options => options.Excluding(o => o.Id));
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class CreateFoodCommandHandlerTests
         var result = await _sut.Handle(_command, default);
 
         // Assert
-        await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == "Banana"));
+        await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
         await _unitOfWork.DidNotReceive().SaveChangesAsync();
         result.IsError().Should().BeTrue();
     }
@@ -63,9 +63,9 @@ public class CreateFoodCommandHandlerTests
     public async Task Handle_ShouldReturnValidationError_WhenRequestIsInvalid()
     {
         // Arrange
-        var invalidCommand = new CreateFoodCommand("Banana", -5, 0, 0, 0);
+        var invalidCommand = new CreateFoodCommand(_banana.Name, calories: -5, _banana.ProteinGrams, _banana.CarbohydrateGrams, _banana.FatGrams);
         _validator.ValidateAsync(invalidCommand, default)
-            .Returns(new ValidationResult([ new ValidationFailure(propertyName: "Calories", errorMessage: "Cannot be negative")]));
+            .Returns(new ValidationResult([ new ValidationFailure(propertyName: nameof(_banana.Calories), errorMessage: string.Empty)]));
 
         // Act
         var result = await _sut.Handle(invalidCommand, default);

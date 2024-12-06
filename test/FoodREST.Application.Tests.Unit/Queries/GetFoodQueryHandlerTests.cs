@@ -8,16 +8,16 @@ using NSubstitute.ReturnsExtensions;
 
 namespace FoodREST.Application.Tests.Unit.Queries;
 
-public class GetFoodQueryHandlerTests
+public class GetFoodQueryHandlerTests : IClassFixture<FoodFixture>
 {
-    private readonly Guid guid;
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
 
+    private Food _banana;
     private GetFoodQueryHandler _sut;
 
-    public GetFoodQueryHandlerTests()
+    public GetFoodQueryHandlerTests(FoodFixture foodFixture)
     {
-        guid = Guid.NewGuid();
+        _banana = foodFixture.Banana;
         _sut = new GetFoodQueryHandler(_foodRepository);
     }
 
@@ -25,32 +25,31 @@ public class GetFoodQueryHandlerTests
     public async Task Handle_ShouldReturnFood_WhenRequestIsValid()
     {
         // Arrange
-        var query = new GetFoodQuery() { Id = guid };
-        var banana = new Food(guid, "Banana", 110, 2, 27, 0);
+        var query = new GetFoodQuery() { Id = _banana.Id };
 
-        _foodRepository.GetByIdAsync(guid).Returns(banana);
+        _foodRepository.GetByIdAsync(_banana.Id).Returns(_banana);
 
         // Act
         var result = await _sut.Handle(query, default);
 
         // Assert
-        await _foodRepository.Received(1).GetByIdAsync(guid);
+        await _foodRepository.Received(1).GetByIdAsync(_banana.Id);
         result.IsError().Should().BeFalse();
-        result.Value.Should().BeEquivalentTo(banana, options => options.Excluding(o => o.Id));
+        result.Value.Should().BeEquivalentTo(_banana, options => options.Excluding(o => o.Id));
     }
 
     [Fact]
     public async Task Handle_ShouldReturnNotFound_WhenDoesNotExist()
     {
         // Arrange
-        var query = new GetFoodQuery() { Id = guid };
-        _foodRepository.GetByIdAsync(guid).ReturnsNull();
+        var query = new GetFoodQuery() { Id = _banana.Id };
+        _foodRepository.GetByIdAsync(_banana.Id).ReturnsNull();
 
         // Act
         var result = await _sut.Handle(query, default);
 
         // Assert
-        await _foodRepository.Received(1).GetByIdAsync(guid);
+        await _foodRepository.Received(1).GetByIdAsync(_banana.Id);
         result.IsNotFound().Should().BeTrue();
     }
 }
