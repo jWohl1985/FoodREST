@@ -38,7 +38,7 @@ public class FoodController : ControllerBase
         }
 
         return result.IsError()
-            ? BadRequest()
+            ? Problem()
             : Ok(result.Value.MapToResponse());
     }
 

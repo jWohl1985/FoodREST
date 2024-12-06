@@ -6,11 +6,11 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "Name":"Banana",
-  "Calories":"110",
-  "ProteinGrams":"3",
-  "CarbohydrateGrams":"27",
-  "FatGrams":"0"
+  "Name":"Beef Jerky",
+  "Calories":"90",
+  "ProteinGrams":"15",
+  "CarbohydrateGrams":"10",
+  "FatGrams":"2"
 }
 
 ### Get a food
@@ -35,5 +35,5 @@ Content-Type: application/json
 
 
 ### Delete a food
-DELETE {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
+DELETE {{FoodREST.API_HostAddress}}/api/foods/8ff1cc7e-b788-4f40-ad7a-4be699634d3f
 Accept: application/json
