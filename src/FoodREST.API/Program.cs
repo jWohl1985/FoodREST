@@ -1,3 +1,4 @@
+using FoodREST.API;
 using FoodREST.API.Mapping;
 using FoodREST.Application;
 using FoodREST.Infrastructure;
@@ -8,6 +9,18 @@ var config = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddOutputCache(x =>
+{
+    x.AddBasePolicy(c => c.Cache());
+    x.AddPolicy(OutputCachePolicies.FoodCachePolicy, c =>
+    {
+        c.Cache()
+            .Expire(TimeSpan.FromMinutes(1))
+            .Tag(OutputCacheTags.FoodTag);
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services
@@ -24,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
 

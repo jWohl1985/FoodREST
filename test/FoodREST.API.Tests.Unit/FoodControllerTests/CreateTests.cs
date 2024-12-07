@@ -7,6 +7,7 @@ using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using NSubstitute;
 
 namespace FoodREST.API.Tests.Unit.FoodControllerTests;
@@ -14,6 +15,7 @@ namespace FoodREST.API.Tests.Unit.FoodControllerTests;
 public class CreateTests
 {
     private readonly IMediator _mediator = Substitute.For<IMediator>();
+    private readonly IOutputCacheStore _outputCacheStore = Substitute.For<IOutputCacheStore>();
 
     private readonly CreateFoodRequest _validRequest;
     private readonly CreateFoodRequest _invalidRequest;
@@ -40,7 +42,7 @@ public class CreateTests
             FatGrams = -2,
         };
 
-        _sut = new FoodController(_mediator);
+        _sut = new FoodController(_mediator, _outputCacheStore);
     }
 
     [Fact]

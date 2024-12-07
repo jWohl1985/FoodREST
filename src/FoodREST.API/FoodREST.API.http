@@ -1,4 +1,5 @@
 @FoodREST.API_HostAddress = https://localhost:7154
+@InvalidGuid = Guid.NewGuid();
 
 ### Create a food
 POST {{FoodREST.API_HostAddress}}/api/foods
@@ -14,14 +15,17 @@ Content-Type: application/json
 }
 
 ### Get a food
-GET {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
+GET {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
+
+### Get an invalid food
+GET {{FoodREST.API_HostAddress}}/api/foods/{{InvalidGuid}}
 
 ### Get all foods
 GET {{FoodREST.API_HostAddress}}/api/foods
 Accept: application/json
 
 ### Update a food
-PUT {{FoodREST.API_HostAddress}}/api/foods/b37014f9-51df-4572-8bf8-46f24b3fbfce
+PUT {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
 Accept: application/json
 Content-Type: application/json
 

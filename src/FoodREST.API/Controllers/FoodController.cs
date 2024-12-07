@@ -6,6 +6,7 @@ using FoodREST.Contracts.Requests;
 using FoodREST.Contracts.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodREST.API.Controllers;
 
@@ -13,10 +14,12 @@ namespace FoodREST.API.Controllers;
 public class FoodController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IOutputCacheStore _outputCacheStore;
 
-    public FoodController(IMediator mediator)
+    public FoodController(IMediator mediator, IOutputCacheStore outputCacheStore)
     {
         _mediator = mediator;
+        _outputCacheStore = outputCacheStore;
     }
 
     [HttpPost(ApiEndpoints.Foods.Create)]
@@ -37,12 +40,15 @@ public class FoodController : ControllerBase
             return BadRequest(response);
         }
 
+        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+
         return result.IsError()
             ? Problem()
             : Ok(result.Value.MapToResponse());
     }
 
     [HttpGet(ApiEndpoints.Foods.Get)]
+    [OutputCache(PolicyName = OutputCachePolicies.FoodCachePolicy)]
     public async Task<IActionResult> Get([FromRoute]Guid id, CancellationToken token)
     {
         var query = new GetFoodQuery() { Id = id };
@@ -55,6 +61,7 @@ public class FoodController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Foods.GetAll)]
+    [OutputCache(PolicyName = OutputCachePolicies.FoodCachePolicy)]
     public async Task<IActionResult> GetAll(CancellationToken token)
     {
         var query = new GetAllFoodsQuery();
@@ -82,6 +89,8 @@ public class FoodController : ControllerBase
             return BadRequest(response);
         }
 
+        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+
         return result.IsNotFound()
             ? NotFound()
             : Ok(result.Value.MapToResponse());
@@ -93,6 +102,8 @@ public class FoodController : ControllerBase
         var command = new DeleteFoodCommand() { Id = id };
 
         var result = await _mediator.Send(command, token);
+
+        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
 
         return result.IsNotFound()
             ? NotFound()
