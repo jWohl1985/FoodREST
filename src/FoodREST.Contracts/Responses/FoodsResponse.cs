@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.Contracts.Responses;
 
-public class FoodsResponse
+public class FoodsResponse : PagedResponse<FoodResponse>
 {
-    public IEnumerable<FoodResponse> Items { get; init; } = Enumerable.Empty<FoodResponse>();
+
 }

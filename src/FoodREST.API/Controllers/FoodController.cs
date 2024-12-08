@@ -4,6 +4,7 @@ using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
 using FoodREST.Contracts.Responses;
+using FoodREST.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -62,13 +63,15 @@ public class FoodController : ControllerBase
 
     [HttpGet(ApiEndpoints.Foods.GetAll)]
     [OutputCache(PolicyName = OutputCachePolicies.FoodCachePolicy)]
-    public async Task<IActionResult> GetAll(CancellationToken token)
+    public async Task<IActionResult> GetAll([FromQuery]GetAllFoodsRequest request, CancellationToken token)
     {
-        var query = new GetAllFoodsQuery();
+        var query = new GetAllFoodsQuery() { Options = request.MapToOptions() };
 
-        var result = await _mediator.Send(query, token);
+        (IEnumerable<Food> Foods, int Count) result = await _mediator.Send(query, token);
 
-        return Ok(result.MapToResponse());
+        var foodsResponse = result.Foods.MapToResponse(request.Page, request.PageSize, result.Count);
+
+        return Ok(foodsResponse);
     }
 
     [HttpPut(ApiEndpoints.Foods.Update)]
@@ -89,11 +92,13 @@ public class FoodController : ControllerBase
             return BadRequest(response);
         }
 
-        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+        if (result.IsNotFound())
+        {
+            return NotFound();
+        }
 
-        return result.IsNotFound()
-            ? NotFound()
-            : Ok(result.Value.MapToResponse());
+        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+        return Ok(result.Value.MapToResponse());
     }
 
     [HttpDelete(ApiEndpoints.Foods.Delete)]

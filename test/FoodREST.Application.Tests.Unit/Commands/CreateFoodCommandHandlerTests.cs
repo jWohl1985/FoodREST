@@ -38,7 +38,7 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
-        await _unitOfWork.Received(1).SaveChangesAsync();
+        _unitOfWork.Received(1).SaveChanges();
         result.IsError().Should().BeFalse();
         result.Value.Should().BeEquivalentTo(_banana, options => options.Excluding(o => o.Id));
     }
@@ -55,7 +55,8 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
-        await _unitOfWork.DidNotReceive().SaveChangesAsync();
+        _unitOfWork.Received(1).Rollback();
+        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsError().Should().BeTrue();
     }
 
@@ -73,7 +74,8 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(invalidCommand, default);
         await _foodRepository.DidNotReceive().AddFoodAsync(Arg.Any<Food>());
-        await _unitOfWork.DidNotReceive().SaveChangesAsync();
+        await _unitOfWork.DidNotReceive().BeginAsync();
+        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsInvalid().Should().BeTrue();
     }
 }

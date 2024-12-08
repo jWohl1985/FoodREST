@@ -2,5 +2,11 @@
 
 public interface IUnitOfWork
 {
-    Task SaveChangesAsync();
+    bool HasStarted { get; }
+
+    Task BeginAsync(CancellationToken token = default);
+
+    void Rollback();
+
+    void SaveChanges();
 }

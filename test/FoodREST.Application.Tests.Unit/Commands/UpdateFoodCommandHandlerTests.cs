@@ -46,7 +46,7 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
-        await _unitOfWork.Received(1).SaveChangesAsync();
+        _unitOfWork.Received(1).SaveChanges();
         result.IsError().Should().BeFalse();
         result.Value.Should().BeEquivalentTo(_expectedFood);
     }
@@ -64,7 +64,8 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
-        await _unitOfWork.DidNotReceive().SaveChangesAsync();
+        _unitOfWork.Received(1).Rollback();
+        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsNotFound().Should().BeTrue();
     }
 
@@ -83,7 +84,8 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(invalidCommand, default);
         await _foodRepository.DidNotReceive().UpdateFoodAsync(Arg.Any<Guid>(), Arg.Any<Food>());
-        await _unitOfWork.DidNotReceive().SaveChangesAsync();
+        await _unitOfWork.DidNotReceive().BeginAsync();
+        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsInvalid().Should().BeTrue();
     }
 }

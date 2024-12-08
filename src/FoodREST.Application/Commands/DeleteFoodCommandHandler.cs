@@ -17,14 +17,17 @@ public class DeleteFoodCommandHandler : IRequestHandler<DeleteFoodCommand, Resul
 
     public async Task<Result> Handle(DeleteFoodCommand request, CancellationToken cancellationToken)
     {
+        await _unitOfWork.BeginAsync(cancellationToken);
+
         bool success = await _foodRepository.DeleteFoodAsync(request.Id, cancellationToken);
 
         if (!success)
         {
+            _unitOfWork.Rollback();
             return Result.NotFound();
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChanges();
         return Result.Success();
     }
 }

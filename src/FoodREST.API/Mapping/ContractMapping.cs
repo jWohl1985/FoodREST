@@ -1,4 +1,6 @@
 ﻿using Ardalis.Result;
+using FoodREST.Application.Queries;
+using FoodREST.Contracts.Requests;
 using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
 using Microsoft.AspNetCore.Http.Features;
@@ -20,11 +22,14 @@ public static class ContractMapping
         };
     }
 
-    public static FoodsResponse MapToResponse(this IEnumerable<Food> foods)
+    public static FoodsResponse MapToResponse(this IEnumerable<Food> foods, int page, int pageSize, int totalCount)
     {
         return new FoodsResponse()
         {
-            Items = foods.Select(MapToResponse)
+            Items = foods.Select(MapToResponse),
+            Page = page,
+            PageSize = pageSize,
+            Total = totalCount,
         };
     }
 
@@ -39,6 +44,22 @@ public static class ContractMapping
         return new ValidationFailureResponse()
         {
             Errors = responses,
+        };
+    }
+
+    public static GetAllFoodsOptions MapToOptions(this GetAllFoodsRequest request)
+    {
+        return new GetAllFoodsOptions()
+        {
+            Name = request.Name,
+            SortField = request.SortBy?.Trim('+', '-'),
+            SortOrder = request.SortBy is null
+                ? SortOrder.Unsorted
+                : request.SortBy.StartsWith('-')
+                    ? SortOrder.Descending
+                    : SortOrder.Ascending,
+            Page = request.Page,
+            PageSize = request.PageSize,
         };
     }
 }

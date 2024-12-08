@@ -30,7 +30,7 @@ public class DeleteFoodCommandHandlerTests
 
         // Assert
         await _foodRepository.Received(1).DeleteFoodAsync(command.Id);
-        await _unitOfWork.Received(1).SaveChangesAsync();
+        _unitOfWork.Received(1).SaveChanges();
         result.IsSuccess.Should().BeTrue();
     }
 
@@ -46,7 +46,8 @@ public class DeleteFoodCommandHandlerTests
 
         // Assert
         await _foodRepository.Received(1).DeleteFoodAsync(command.Id);
-        await _unitOfWork.DidNotReceive().SaveChangesAsync();
+        _unitOfWork.Received(1).Rollback();
+        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsNotFound().Should().BeTrue();
     }
 }

@@ -45,6 +45,9 @@ public class ContractMappingTests : IClassFixture<FoodFixture>
 
         FoodsResponse expectedResponse = new()
         {
+            Page = 1,
+            PageSize = 25,
+            Total = 2,
             Items = new List<FoodResponse>()
             { 
                 new FoodResponse()
@@ -69,7 +72,7 @@ public class ContractMappingTests : IClassFixture<FoodFixture>
         };
 
         // Act
-        var result = foods.MapToResponse();
+        var result = foods.MapToResponse(expectedResponse.Page, expectedResponse.PageSize, 2);
 
         // Assert
         result.Should().BeEquivalentTo(expectedResponse);

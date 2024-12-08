@@ -39,6 +39,8 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
             return Result.Invalid(validationProblems);
         }
 
+        await _unitOfWork.BeginAsync(cancellationToken);
+
         Food food = new(
             name: request.Name,
             calories: request.Calories,
@@ -51,10 +53,11 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
 
         if (!success)
         {
+            _unitOfWork.Rollback();
             return Result.Error();
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        _unitOfWork.SaveChanges();
 
         return Result.Success(food);
     }
