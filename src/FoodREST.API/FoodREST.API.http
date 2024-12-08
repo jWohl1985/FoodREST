@@ -21,7 +21,7 @@ GET {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
 GET {{FoodREST.API_HostAddress}}/api/foods/{{InvalidGuid}}
 
 ### Get all foods
-GET {{FoodREST.API_HostAddress}}/api/foods?sortBy=-name&page=3&pageSize=3
+GET {{FoodREST.API_HostAddress}}/api/foods?sortBy=name&page=2&pageSize=3
 Accept: application/json
 
 ### Update a food
@@ -37,6 +37,18 @@ Content-Type: application/json
   "FatGrams":"0"
 }
 
+### Invalid update
+PUT {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name":"",
+  "Calories":"-15",
+  "ProteinGrams":"-1",
+  "CarbohydrateGrams":"-30",
+  "FatGrams":"-2"
+}
 
 ### Delete a food
 DELETE {{FoodREST.API_HostAddress}}/api/foods/8036c4c1-2374-42c2-a16e-d911926f7e3c

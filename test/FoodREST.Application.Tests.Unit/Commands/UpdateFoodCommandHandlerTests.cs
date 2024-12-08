@@ -6,6 +6,7 @@ using FoodREST.Application.Commands;
 using FoodREST.Application.Interfaces;
 using FoodREST.Domain;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 
 namespace FoodREST.Application.Tests.Unit.Commands;
@@ -37,13 +38,11 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
     {
         // Arrange
         _foodRepository.UpdateFoodAsync(_command.Id, Arg.Any<Food>()).Returns(_expectedFood);
-        _validator.ValidateAsync(_command).Returns(new ValidationResult() { Errors = [] });
 
         // Act
         var result = await _sut.Handle(_command, default);
 
         // Assert
-        await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
         result.IsError().Should().BeFalse();
         result.Value.Should().BeEquivalentTo(_expectedFood);
@@ -54,32 +53,30 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
     {
         // Arrange
         _foodRepository.UpdateFoodAsync(Arg.Any<Guid>(), Arg.Any<Food>()).ReturnsNull();
-        _validator.ValidateAsync(_command).Returns(new ValidationResult() { Errors = [] });
 
         // Act
         var result = await _sut.Handle(_command, default);
 
         // Assert
-        await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
         result.IsNotFound().Should().BeTrue();
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnValidationError_WhenRequestIsInvalid()
+    public async Task Handle_ShouldThrowValidationException_WhenRequestIsInvalid()
     {
         // Arrange
         var invalidCommand = new UpdateFoodCommand(_command.Id, string.Empty, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
         _foodRepository.UpdateFoodAsync(invalidCommand.Id, Arg.Any<Food>()).ReturnsNull();
-        _validator.ValidateAsync(invalidCommand, default)
-            .Returns(new ValidationResult([ new ValidationFailure(propertyName: nameof(_command.Name), errorMessage: string.Empty)]));
+        _validator.ValidateAsync(invalidCommand, options => { options.ThrowOnFailures(); }, default)
+            .ThrowsAsyncForAnyArgs(new ValidationException(message: "test"));
 
         // Act
-        var result = await _sut.Handle(invalidCommand, default);
+        var result = () => _sut.Handle(invalidCommand, default);
 
         // Assert
-        await _validator.Received(1).ValidateAsync(invalidCommand, default);
+        await result.Should().ThrowAsync<ValidationException>();
         await _foodRepository.DidNotReceive().UpdateFoodAsync(Arg.Any<Guid>(), Arg.Any<Food>());
-        result.IsInvalid().Should().BeTrue();
+
     }
 }

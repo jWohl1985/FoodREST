@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using FluentValidation;
-using FluentValidation.Results;
 using FoodREST.Application.Interfaces;
 using FoodREST.Domain;
 using MediatR;
@@ -21,20 +20,7 @@ public class CreateFoodCommandHandler : IRequestHandler<CreateFoodCommand, Resul
 
     public async Task<Result<Food>> Handle(CreateFoodCommand request, CancellationToken cancellationToken)
     {
-        ValidationResult validation = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validation.IsValid)
-        {
-            List<ValidationError> validationProblems = new();
-
-            foreach (var error in validation.Errors)
-            {
-                ValidationError problem = new(error.PropertyName, error.ErrorMessage);
-                validationProblems.Add(problem);
-            }
-
-            return Result.Invalid(validationProblems);
-        }
+        await _validator.ValidateAndThrowAsync(request, cancellationToken);
 
         Food food = new(
             name: request.Name,

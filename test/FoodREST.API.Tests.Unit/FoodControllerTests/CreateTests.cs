@@ -1,14 +1,17 @@
 ﻿using Ardalis.Result;
 using FluentAssertions;
+using FluentValidation;
 using FoodREST.API.Controllers;
 using FoodREST.Application.Commands;
 using FoodREST.Contracts.Requests;
 using FoodREST.Contracts.Responses;
 using FoodREST.Domain;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace FoodREST.API.Tests.Unit.FoodControllerTests;
 
@@ -78,38 +81,24 @@ public class CreateTests
     }
 
     [Fact]
-    public async Task Create_ShouldReturnBadRequestAndObject_WhenRequestIsInvalid()
+    public async Task Create_ShouldThrowValidationException_WhenRequestIsInvalid()
     {
         // Arrange
-        ValidationFailureResponse expectedResponse = new()
-        {
-            Errors = new List<ValidationResponse>()
-            {
-                new ValidationResponse() { PropertyName = nameof(CreateFoodRequest.Name), Message = "" },
-                new ValidationResponse() { PropertyName = nameof(CreateFoodRequest.Calories), Message = "" },
-                new ValidationResponse() { PropertyName = nameof(CreateFoodRequest.ProteinGrams), Message = "" },
-                new ValidationResponse() { PropertyName = nameof(CreateFoodRequest.CarbohydrateGrams), Message = "" },
-                new ValidationResponse() { PropertyName = nameof(CreateFoodRequest.FatGrams), Message = "" },
-            }
-        };
+        CreateFoodCommand invalidCommand = new(
+            _invalidRequest.Name,
+            _invalidRequest.Calories,
+            _invalidRequest.ProteinGrams,
+            _invalidRequest.CarbohydrateGrams,
+            _invalidRequest.FatGrams);
 
-        _mediator.Send(Arg.Any<CreateFoodCommand>()).Returns(Result.Invalid(new List<ValidationError>()
-        {
-            new ValidationError() { Identifier =  nameof(CreateFoodCommand.Name), ErrorMessage = "" },
-            new ValidationError() { Identifier =  nameof(CreateFoodCommand.Calories), ErrorMessage = "" },
-            new ValidationError() { Identifier =  nameof(CreateFoodCommand.ProteinGrams), ErrorMessage = "" },
-            new ValidationError() { Identifier =  nameof(CreateFoodCommand.CarbohydrateGrams), ErrorMessage = "" },
-            new ValidationError() { Identifier =  nameof(CreateFoodCommand.FatGrams), ErrorMessage = "" },
-
-        }));
+        _mediator.Send(invalidCommand, default)
+            .ThrowsAsyncForAnyArgs(new ValidationException("test"));
 
         // Act
-        var result = (BadRequestObjectResult)await _sut.Create(_invalidRequest, default);
+        var result = () => _sut.Create(_invalidRequest, default);
 
         // Assert
-        await _mediator.Received(1).Send(Arg.Is<CreateFoodCommand>(c => c.Name == _invalidRequest.Name));
-        result.StatusCode.Should().Be(400);
-        result.Value.Should().BeEquivalentTo(expectedResponse);
+        await result.Should().ThrowAsync<ValidationException>();
     }
 
     [Fact]

@@ -3,8 +3,6 @@ using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
 using FoodREST.Contracts.Requests;
-using FoodREST.Contracts.Responses;
-using FoodREST.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -35,12 +33,6 @@ public class FoodController : ControllerBase
 
         var result = await _mediator.Send(command, token);
 
-        if (result.IsInvalid())
-        {
-            ValidationFailureResponse response = result.ValidationErrors.MapToResponse();
-            return BadRequest(response);
-        }
-
         await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
 
         return result.IsError()
@@ -67,7 +59,7 @@ public class FoodController : ControllerBase
     {
         var query = new GetAllFoodsQuery() { Options = request.MapToOptions() };
 
-        (IEnumerable<Food> Foods, int Count) result = await _mediator.Send(query, token);
+        var result = await _mediator.Send(query, token);
 
         var foodsResponse = result.Foods.MapToResponse(request.Page, request.PageSize, result.Count);
 
@@ -86,12 +78,6 @@ public class FoodController : ControllerBase
 
         var result = await _mediator.Send(command, token);
 
-        if (result.IsInvalid())
-        {
-            ValidationFailureResponse response = result.ValidationErrors.MapToResponse();
-            return BadRequest(response);
-        }
-
         if (result.IsNotFound())
         {
             return NotFound();
@@ -108,10 +94,12 @@ public class FoodController : ControllerBase
 
         var result = await _mediator.Send(command, token);
 
-        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+        if (result.IsNotFound())
+        {
+            return NotFound();
+        }
 
-        return result.IsNotFound()
-            ? NotFound()
-            : Ok();
+        await _outputCacheStore.EvictByTagAsync(OutputCacheTags.FoodTag, token);
+        return Ok();
     }
 }

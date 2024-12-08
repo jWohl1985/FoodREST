@@ -1,11 +1,13 @@
 ﻿using Ardalis.Result;
 using FluentAssertions;
 using FluentValidation;
+using FluentValidation.Internal;
 using FluentValidation.Results;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Interfaces;
 using FoodREST.Domain;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace FoodREST.Application.Tests.Unit.Commands;
 
@@ -46,7 +48,6 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
     {
         // Arrange
         _foodRepository.AddFoodAsync(Arg.Any<Food>()).Returns(false);
-        _validator.ValidateAsync(_command).Returns(new ValidationResult() { Errors = [] });
 
         // Act
         var result = await _sut.Handle(_command, default);
@@ -57,19 +58,18 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnValidationError_WhenRequestIsInvalid()
+    public async Task Handle_ShouldThrowValidationException_WhenRequestIsInvalid()
     {
         // Arrange
         var invalidCommand = new CreateFoodCommand(_banana.Name, calories: -5, _banana.ProteinGrams, _banana.CarbohydrateGrams, _banana.FatGrams);
-        _validator.ValidateAsync(invalidCommand, default)
-            .Returns(new ValidationResult([ new ValidationFailure(propertyName: nameof(_banana.Calories), errorMessage: string.Empty)]));
+        _validator.ValidateAsync(invalidCommand, options => { options.ThrowOnFailures(); }, default)
+            .ThrowsAsyncForAnyArgs(new ValidationException("test"));
 
         // Act
-        var result = await _sut.Handle(invalidCommand, default);
+        var result = () => _sut.Handle(invalidCommand, default);
 
         // Assert
-        await _validator.Received(1).ValidateAsync(invalidCommand, default);
+        await result.Should().ThrowAsync<ValidationException>();
         await _foodRepository.DidNotReceive().AddFoodAsync(Arg.Any<Food>());
-        result.IsInvalid().Should().BeTrue();
     }
 }

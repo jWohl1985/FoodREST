@@ -21,20 +21,7 @@ public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Resul
 
     public async Task<Result<Food>> Handle(UpdateFoodCommand request, CancellationToken cancellationToken)
     {
-        ValidationResult validation = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validation.IsValid)
-        {
-            List<ValidationError> validationProblems = new();
-
-            foreach (var error in validation.Errors)
-            {
-                ValidationError problem = new(error.PropertyName, error.ErrorMessage);
-                validationProblems.Add(problem);
-            }
-
-            return Result.Invalid(validationProblems);
-        }
+        await _validator.ValidateAndThrowAsync(request, cancellationToken);
 
         Food newFood = new(
             name: request.Name, 
