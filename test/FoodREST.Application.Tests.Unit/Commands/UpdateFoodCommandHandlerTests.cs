@@ -13,7 +13,6 @@ namespace FoodREST.Application.Tests.Unit.Commands;
 public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
-    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<UpdateFoodCommand> _validator = Substitute.For<IValidator<UpdateFoodCommand>>();
 
     private UpdateFoodCommand _command;
@@ -30,7 +29,7 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         _command = new UpdateFoodCommand(beefJerky.Id, banana.Name, banana.Calories, banana.ProteinGrams, banana.CarbohydrateGrams, banana.FatGrams);
         _expectedFood = new Food(_command.Id, _command.Name, _command.Calories, _command.ProteinGrams, _command.CarbohydrateGrams, _command.FatGrams);
 
-        _sut = new UpdateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
+        _sut = new UpdateFoodCommandHandler(_foodRepository, _validator);
     }
 
     [Fact]
@@ -46,7 +45,6 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
-        _unitOfWork.Received(1).SaveChanges();
         result.IsError().Should().BeFalse();
         result.Value.Should().BeEquivalentTo(_expectedFood);
     }
@@ -64,8 +62,6 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(_command);
         await _foodRepository.Received(1).UpdateFoodAsync(_command.Id, Arg.Is<Food>(f => f.Name == _expectedFood.Name));
-        _unitOfWork.Received(1).Rollback();
-        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsNotFound().Should().BeTrue();
     }
 
@@ -84,8 +80,6 @@ public class UpdateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(invalidCommand, default);
         await _foodRepository.DidNotReceive().UpdateFoodAsync(Arg.Any<Guid>(), Arg.Any<Food>());
-        await _unitOfWork.DidNotReceive().BeginAsync();
-        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsInvalid().Should().BeTrue();
     }
 }

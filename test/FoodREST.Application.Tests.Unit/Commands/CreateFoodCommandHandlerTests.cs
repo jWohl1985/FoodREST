@@ -12,7 +12,6 @@ namespace FoodREST.Application.Tests.Unit.Commands;
 public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 {
     private readonly IFoodRepository _foodRepository = Substitute.For<IFoodRepository>();
-    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<CreateFoodCommand> _validator = Substitute.For<IValidator<CreateFoodCommand>>();
 
     private Food _banana;
@@ -23,7 +22,7 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
     {
         _banana = foodFixture.Banana;
         _command = new CreateFoodCommand(_banana.Name, _banana.Calories, _banana.ProteinGrams, _banana.CarbohydrateGrams, _banana.FatGrams);
-        _sut = new CreateFoodCommandHandler(_foodRepository, _unitOfWork, _validator);
+        _sut = new CreateFoodCommandHandler(_foodRepository, _validator);
     }
 
     [Fact]
@@ -38,7 +37,6 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
-        _unitOfWork.Received(1).SaveChanges();
         result.IsError().Should().BeFalse();
         result.Value.Should().BeEquivalentTo(_banana, options => options.Excluding(o => o.Id));
     }
@@ -55,8 +53,6 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
 
         // Assert
         await _foodRepository.Received(1).AddFoodAsync(Arg.Is<Food>(f => f.Name == _banana.Name));
-        _unitOfWork.Received(1).Rollback();
-        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsError().Should().BeTrue();
     }
 
@@ -74,8 +70,6 @@ public class CreateFoodCommandHandlerTests : IClassFixture<FoodFixture>
         // Assert
         await _validator.Received(1).ValidateAsync(invalidCommand, default);
         await _foodRepository.DidNotReceive().AddFoodAsync(Arg.Any<Food>());
-        await _unitOfWork.DidNotReceive().BeginAsync();
-        _unitOfWork.DidNotReceive().SaveChanges();
         result.IsInvalid().Should().BeTrue();
     }
 }

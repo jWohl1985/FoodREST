@@ -13,7 +13,6 @@ public static class DependencyInjection
 
         services.AddSingleton<IDbConnectionFactory>(_ => new NpgSqlConnectionFactory(connectionString));
         services.AddSingleton<IFoodRepository, DapperFoodRepository>();
-        services.AddSingleton<IUnitOfWork, DapperUnitOfWork>();
         services.AddSingleton<DbInitializer>();
 
         return services;

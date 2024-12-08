@@ -10,15 +10,12 @@ namespace FoodREST.Application.Commands;
 public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Result<Food>>
 {
     private readonly IFoodRepository _foodRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<UpdateFoodCommand> _validator;
 
-    public UpdateFoodCommandHandler(IFoodRepository foodRepository, 
-        IUnitOfWork unitOfWork,
+    public UpdateFoodCommandHandler(IFoodRepository foodRepository,
         IValidator<UpdateFoodCommand> validator)
     {
         _foodRepository = foodRepository;
-        _unitOfWork = unitOfWork;
         _validator = validator;
     }
 
@@ -39,8 +36,6 @@ public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Resul
             return Result.Invalid(validationProblems);
         }
 
-        await _unitOfWork.BeginAsync(cancellationToken);
-
         Food newFood = new(
             name: request.Name, 
             calories: request.Calories, 
@@ -53,11 +48,9 @@ public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Resul
 
         if (result is null)
         {
-            _unitOfWork.Rollback();
             return Result.NotFound();
         }
 
-        _unitOfWork.SaveChanges();
         return Result.Success(result);
     }
 }
