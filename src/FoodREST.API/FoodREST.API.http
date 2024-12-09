@@ -51,5 +51,5 @@ Content-Type: application/json
 }
 
 ### Delete a food
-DELETE {{FoodREST.API_HostAddress}}/api/foods/8036c4c1-2374-42c2-a16e-d911926f7e3c
+DELETE {{FoodREST.API_HostAddress}}/api/foods/04e98166-07fd-4106-bc54-07ded2ce5dab
 Accept: application/json

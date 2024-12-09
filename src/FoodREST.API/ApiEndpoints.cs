@@ -9,9 +9,9 @@ public static class ApiEndpoints
         private const string Base = $"{ApiBase}/foods";
 
         public const string Create = Base;
-        public const string Get = $"{ApiBase}/foods/{{id:guid}}";
-        public const string GetAll = $"{ApiBase}/foods";
-        public const string Update = $"{ApiBase}/foods/{{id:guid}}";
-        public const string Delete = $"{ApiBase}/foods/{{id:guid}}";
+        public const string Get = $"{Base}/{{id:guid}}";
+        public const string GetAll = Base;
+        public const string Update = $"{Base}/{{id:guid}}";
+        public const string Delete = $"{Base}/{{id:guid}}";
     }
 }
