@@ -6,7 +6,7 @@ using System.Data;
 
 namespace FoodREST.Infrastructure.Services;
 
-public class DapperFoodRepository : IFoodRepository
+internal sealed class DapperFoodRepository : IFoodRepository
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 

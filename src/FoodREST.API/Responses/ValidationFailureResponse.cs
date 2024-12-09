@@ -1,11 +1,11 @@
 ﻿namespace FoodREST.API.Responses;
 
-public class ValidationFailureResponse
+public sealed class ValidationFailureResponse
 {
     public required IEnumerable<ValidationResponse> Errors { get; init; }
 }
 
-public class ValidationResponse
+public sealed class ValidationResponse
 {
     public required string PropertyName { get; init; }
 

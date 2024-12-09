@@ -8,7 +8,7 @@ public interface IDbConnectionFactory
     Task<IDbConnection> CreateConnectionAsync(CancellationToken token = default);
 }
 
-public class NpgSqlConnectionFactory : IDbConnectionFactory
+internal sealed class NpgSqlConnectionFactory : IDbConnectionFactory
 {
     private readonly string _connectionString;
 

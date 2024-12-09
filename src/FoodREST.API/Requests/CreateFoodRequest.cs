@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Requests;
 
-public class CreateFoodRequest
+public sealed class CreateFoodRequest
 {
     public required string Name { get; init; }
 

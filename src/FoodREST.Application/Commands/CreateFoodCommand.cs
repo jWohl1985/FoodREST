@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FoodREST.Application.Commands;
 
-public class CreateFoodCommand : IRequest<Result<Food>>
+public sealed class CreateFoodCommand : IRequest<Result<Food>>
 {
     public CreateFoodCommand(string name, int calories, int proteinGrams, int carbohydrateGrams, int fatGrams)
     {

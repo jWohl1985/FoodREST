@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Requests;
 
-public class PagedRequest
+public abstract class PagedRequest
 {
     public required int Page { get; init; } = 1;
 

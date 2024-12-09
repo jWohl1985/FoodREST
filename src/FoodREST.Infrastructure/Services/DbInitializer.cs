@@ -2,7 +2,7 @@
 
 namespace FoodREST.Infrastructure.Services;
 
-public class DbInitializer
+public sealed class DbInitializer
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 

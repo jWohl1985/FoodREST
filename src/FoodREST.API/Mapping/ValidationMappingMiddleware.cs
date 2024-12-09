@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace FoodREST.API.Mapping;
 
-public class ValidationMappingMiddleware
+internal sealed class ValidationMappingMiddleware
 {
     private readonly RequestDelegate _next;
 

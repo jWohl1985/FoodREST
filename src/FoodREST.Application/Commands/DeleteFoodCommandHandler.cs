@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FoodREST.Application.Commands;
 
-public class DeleteFoodCommandHandler : IRequestHandler<DeleteFoodCommand, Result>
+public sealed class DeleteFoodCommandHandler : IRequestHandler<DeleteFoodCommand, Result>
 {
     private readonly IFoodRepository _foodRepository;
 

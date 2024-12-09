@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Responses;
 
-public class FoodResponse
+public sealed class FoodResponse
 {
     public required Guid Id { get; init; }
 

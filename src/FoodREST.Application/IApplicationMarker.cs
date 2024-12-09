@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.Application;
 
-public interface IApplicationMarker
+internal interface IApplicationMarker
 {
 
 }

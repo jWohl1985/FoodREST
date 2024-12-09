@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Responses;
 
-public class PagedResponse<TResponse>
+public abstract class PagedResponse<TResponse>
 {
     public required IEnumerable<TResponse> Items { get; init; } = Enumerable.Empty<TResponse>();
 

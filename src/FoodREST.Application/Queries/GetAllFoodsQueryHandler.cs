@@ -5,7 +5,7 @@ using MediatR;
 
 namespace FoodREST.Application.Queries;
 
-public class GetAllFoodsQueryHandler : IRequestHandler<GetAllFoodsQuery, (IEnumerable<Food> Foods, int Count)>
+public sealed class GetAllFoodsQueryHandler : IRequestHandler<GetAllFoodsQuery, (IEnumerable<Food> Foods, int Count)>
 {
     private readonly IFoodRepository _foodRepository;
     private readonly IValidator<GetAllFoodsOptions> _optionsValidator;

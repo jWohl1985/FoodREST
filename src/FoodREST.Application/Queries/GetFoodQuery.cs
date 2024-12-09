@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FoodREST.Application.Queries;
 
-public class GetFoodQuery : IRequest<Result<Food>>
+public sealed class GetFoodQuery : IRequest<Result<Food>>
 {
     public Guid Id { get; init; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Responses;
 
-public class FoodsResponse : PagedResponse<FoodResponse>
+public sealed class FoodsResponse : PagedResponse<FoodResponse>
 {
 
 }

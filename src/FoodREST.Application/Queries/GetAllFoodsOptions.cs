@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.Application.Queries;
 
-public class GetAllFoodsOptions
+public sealed class GetAllFoodsOptions
 {
     public string? Name { get; set; }
 

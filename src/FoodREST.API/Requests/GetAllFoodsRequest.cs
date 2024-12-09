@@ -1,6 +1,6 @@
 ﻿namespace FoodREST.API.Requests;
 
-public class GetAllFoodsRequest : PagedRequest
+public sealed class GetAllFoodsRequest : PagedRequest
 {
     public required string? Name { get; init; }
 

@@ -3,7 +3,7 @@ using FoodREST.Application.Commands;
 
 namespace FoodREST.Application.Validators;
 
-public class CreateFoodCommandValidator : AbstractValidator<CreateFoodCommand>
+public sealed class CreateFoodCommandValidator : AbstractValidator<CreateFoodCommand>
 {
     public CreateFoodCommandValidator()
     {

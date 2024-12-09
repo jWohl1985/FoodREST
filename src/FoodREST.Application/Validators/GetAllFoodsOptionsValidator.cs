@@ -3,7 +3,7 @@ using FoodREST.Application.Queries;
 
 namespace FoodREST.Application.Validators;
 
-public class GetAllFoodsOptionsValidator : AbstractValidator<GetAllFoodsOptions>
+public sealed class GetAllFoodsOptionsValidator : AbstractValidator<GetAllFoodsOptions>
 {
     public static readonly string[] AcceptableSortFields =
     {

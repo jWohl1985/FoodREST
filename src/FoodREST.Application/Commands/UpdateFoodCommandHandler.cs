@@ -7,7 +7,7 @@ using MediatR;
 
 namespace FoodREST.Application.Commands;
 
-public class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Result<Food>>
+public sealed class UpdateFoodCommandHandler : IRequestHandler<UpdateFoodCommand, Result<Food>>
 {
     private readonly IFoodRepository _foodRepository;
     private readonly IValidator<UpdateFoodCommand> _validator;
