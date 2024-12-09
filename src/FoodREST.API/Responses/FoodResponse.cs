@@ -1,7 +1,9 @@
-﻿namespace FoodREST.Contracts.Requests;
+﻿namespace FoodREST.API.Responses;
 
-public class CreateFoodRequest
+public class FoodResponse
 {
+    public required Guid Id { get; init; }
+
     public required string Name { get; init; }
 
     public required int Calories { get; init; }

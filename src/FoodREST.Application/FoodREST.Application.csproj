@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodREST.Contracts\FoodREST.Contracts.csproj" />
     <ProjectReference Include="..\FoodREST.Domain\FoodREST.Domain.csproj" />
   </ItemGroup>
 

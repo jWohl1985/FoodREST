@@ -2,7 +2,7 @@
 using FoodREST.API.Mapping;
 using FoodREST.Application.Commands;
 using FoodREST.Application.Queries;
-using FoodREST.Contracts.Requests;
+using FoodREST.API.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

@@ -1,9 +1,8 @@
 ﻿using Ardalis.Result;
 using FoodREST.Application.Queries;
-using FoodREST.Contracts.Requests;
-using FoodREST.Contracts.Responses;
+using FoodREST.API.Requests;
+using FoodREST.API.Responses;
 using FoodREST.Domain;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace FoodREST.API.Mapping;
 

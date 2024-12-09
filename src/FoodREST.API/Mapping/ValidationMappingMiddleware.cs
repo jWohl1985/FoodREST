@@ -1,4 +1,4 @@
-﻿using FoodREST.Contracts.Responses;
+﻿using FoodREST.API.Responses;
 using FluentValidation;
 
 namespace FoodREST.API.Mapping;

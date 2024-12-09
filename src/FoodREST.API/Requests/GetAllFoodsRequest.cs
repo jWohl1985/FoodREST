@@ -1,4 +1,4 @@
-﻿namespace FoodREST.Contracts.Requests;
+﻿namespace FoodREST.API.Requests;
 
 public class GetAllFoodsRequest : PagedRequest
 {

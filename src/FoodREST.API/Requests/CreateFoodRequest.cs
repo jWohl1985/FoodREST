@@ -1,6 +1,6 @@
-﻿namespace FoodREST.Contracts.Requests;
+﻿namespace FoodREST.API.Requests;
 
-public class UpdateFoodRequest
+public class CreateFoodRequest
 {
     public required string Name { get; init; }
 

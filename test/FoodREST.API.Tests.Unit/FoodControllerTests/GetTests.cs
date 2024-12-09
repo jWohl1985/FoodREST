@@ -2,7 +2,7 @@
 using FluentAssertions;
 using FoodREST.API.Controllers;
 using FoodREST.Application.Queries;
-using FoodREST.Contracts.Responses;
+using FoodREST.API.Responses;
 using FoodREST.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

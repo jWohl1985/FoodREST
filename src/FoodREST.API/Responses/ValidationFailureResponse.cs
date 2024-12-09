@@ -1,4 +1,4 @@
-﻿namespace FoodREST.Contracts.Responses;
+﻿namespace FoodREST.API.Responses;
 
 public class ValidationFailureResponse
 {

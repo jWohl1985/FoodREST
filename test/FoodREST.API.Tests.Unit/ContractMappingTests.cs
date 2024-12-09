@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using FoodREST.API.Mapping;
-using FoodREST.Contracts.Responses;
+using FoodREST.API.Responses;
 using FoodREST.Domain;
 
 namespace FoodREST.API.Tests.Unit;
