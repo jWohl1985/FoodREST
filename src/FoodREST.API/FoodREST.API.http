@@ -7,34 +7,40 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "Name":"Beef Jerky",
-  "Calories":"90",
-  "ProteinGrams":"15",
-  "CarbohydrateGrams":"10",
-  "FatGrams":"2"
+  "Name":"Protein Bar",
+  "Calories":"320",
+  "ProteinGrams":"22",
+  "CarbohydrateGrams":"27",
+  "FatGrams":"8"
 }
 
 ### Get a food
-GET {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
+GET {{FoodREST.API_HostAddress}}/api/foods/c3d6f592-7884-45d8-a7cb-ffe21ec1b871
 
 ### Get an invalid food
 GET {{FoodREST.API_HostAddress}}/api/foods/{{InvalidGuid}}
 
 ### Get all foods
-GET {{FoodREST.API_HostAddress}}/api/foods?sortBy=name&page=2&pageSize=3
+GET {{FoodREST.API_HostAddress}}/api/foods
 Accept: application/json
 
+### Get all foods sorted
+GET {{FoodREST.API_HostAddress}}/api/foods?sortBy=-name
+
+### Get all foods paged
+GET {{FoodREST.API_HostAddress}}/api/foods?page=3&pageSize=1
+
 ### Update a food
-PUT {{FoodREST.API_HostAddress}}/api/foods/9378d1ff-e801-489e-92ba-2ead1ad563ef
+PUT {{FoodREST.API_HostAddress}}/api/foods/c3d6f592-7884-45d8-a7cb-ffe21ec1b871
 Accept: application/json
 Content-Type: application/json
 
 {
-  "Name":"Apple",
-  "Calories":"15",
-  "ProteinGrams":"1",
-  "CarbohydrateGrams":"30",
-  "FatGrams":"0"
+  "Name":"Beef Jerky",
+  "Calories":"95",
+  "ProteinGrams":"16",
+  "CarbohydrateGrams":"11",
+  "FatGrams":"3"
 }
 
 ### Invalid update
@@ -51,5 +57,5 @@ Content-Type: application/json
 }
 
 ### Delete a food
-DELETE {{FoodREST.API_HostAddress}}/api/foods/04e98166-07fd-4106-bc54-07ded2ce5dab
+DELETE {{FoodREST.API_HostAddress}}/api/foods/bff453ff-2599-491c-8cf5-470ef7edb83f
 Accept: application/json

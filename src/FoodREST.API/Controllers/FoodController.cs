@@ -97,8 +97,8 @@ public class FoodController : ControllerBase
 
     [HttpDelete(ApiEndpoints.Foods.Delete)]
     [ProducesResponseType(typeof(NotFoundResult), 404)]
-    [ProducesResponseType(typeof(OkResult), 200)]
-    public async Task<ActionResult<OkResult>> Delete([FromRoute]Guid id, CancellationToken token)
+    [ProducesResponseType(200)]
+    public async Task<ActionResult> Delete([FromRoute]Guid id, CancellationToken token)
     {
         var command = new DeleteFoodCommand() { Id = id };
 

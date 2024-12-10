@@ -2,7 +2,9 @@ using FoodREST.API;
 using FoodREST.API.Mapping;
 using FoodREST.Application;
 using FoodREST.Infrastructure;
+using FoodREST.Infrastructure.Persistence;
 using FoodREST.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -43,8 +45,5 @@ app.UseOutputCache();
 app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();
-
-var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
-await dbInitializer.InitializeAsync();
 
 app.Run();

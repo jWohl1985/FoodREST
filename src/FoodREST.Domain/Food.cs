@@ -22,13 +22,18 @@ public sealed class Food
 
     public Guid Id { get; private set; }
 
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-    public int Calories { get; private set; }
+    public int Calories { get; set; }
 
-    public int ProteinGrams { get; private set; }
+    public int ProteinGrams { get; set; }
 
-    public int CarbohydrateGrams { get; private set; }
+    public int CarbohydrateGrams { get; set; }
 
-    public int FatGrams { get; private set; }
+    public int FatGrams { get; set; }
+
+    private Food()
+    {
+
+    }
 }

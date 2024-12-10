@@ -1,5 +1,7 @@
 ﻿using FoodREST.Application.Interfaces;
+using FoodREST.Infrastructure.Persistence;
 using FoodREST.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +13,8 @@ public static class DependencyInjection
     {
         string connectionString = config.GetConnectionString("NpgSqlConnectionString")!;
 
-        services.AddSingleton<IDbConnectionFactory>(_ => new NpgSqlConnectionFactory(connectionString));
-        services.AddSingleton<IFoodRepository, DapperFoodRepository>();
-        services.AddSingleton<DbInitializer>();
+        services.AddScoped<IFoodRepository, EFCoreFoodRepository>();
+        services.AddDbContext<FoodContext>(options => options.UseNpgsql(connectionString));
 
         return services;
     }
