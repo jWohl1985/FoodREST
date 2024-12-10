@@ -13,11 +13,11 @@ public sealed class Food
         int fatGrams)
     {
         Id = id ?? Guid.NewGuid();
-        Name = Guard.Against.NullOrEmpty(name);
-        Calories = Guard.Against.Negative(calories);
-        ProteinGrams = Guard.Against.Negative(proteinGrams);
-        CarbohydrateGrams = Guard.Against.Negative(carbohydrateGrams);
-        FatGrams = Guard.Against.Negative(fatGrams);
+        Name = name;
+        Calories = calories;
+        ProteinGrams = proteinGrams;
+        CarbohydrateGrams = carbohydrateGrams;
+        FatGrams = fatGrams;
     }
 
     public Guid Id { get; private set; }
