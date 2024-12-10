@@ -72,12 +72,13 @@ public class CreateTests
         _mediator.Send(Arg.Is<CreateFoodCommand>(c => c.Name == _validRequest.Name)).Returns(Result.Success(expectedFood));
 
         // Act
-        var result = (OkObjectResult)await _sut.Create(_validRequest, default);
+        var actionResult = await _sut.Create(_validRequest, default);
+        var okObjectResult = (OkObjectResult)actionResult.Result!;
 
         // Assert
         await _mediator.Received(1).Send(Arg.Is<CreateFoodCommand>(c => c.Name == _validRequest.Name));
-        result.StatusCode.Should().Be(200);
-        result.Value.Should().BeEquivalentTo(expectedResponse);
+        okObjectResult.StatusCode.Should().Be(200);
+        okObjectResult.Value.Should().BeEquivalentTo(expectedResponse);
     }
 
     [Fact]
@@ -109,11 +110,12 @@ public class CreateTests
         var expectedResponse = new ProblemDetails() { Status = 500 };
 
         // Act
-        var result = (ObjectResult)await _sut.Create(_validRequest, default);
+        var actionResult = await _sut.Create(_validRequest, default);
+        var objectResult = (ObjectResult)actionResult.Result!;
 
         // Assert
         await _mediator.Received(1).Send(Arg.Is<CreateFoodCommand>(c => c.Name == _validRequest.Name));
-        result.StatusCode.Should().Be(500);
-        result.Value.Should().BeEquivalentTo(expectedResponse);
+        objectResult.StatusCode.Should().Be(500);
+        objectResult.Value.Should().BeEquivalentTo(expectedResponse);
     }
 }

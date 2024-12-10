@@ -36,18 +36,19 @@ public class GetTests
             Id = food.Id,
             Name = food.Name,
             Calories = food.Calories,
-            ProteinGrams = food.ProteinGrams,
+            ProteinGrams = food.ProteinGrams, 
             CarbohydrateGrams = food.CarbohydrateGrams,
             FatGrams = food.FatGrams,
         };
 
         // Act
-        var result = (OkObjectResult)await _sut.Get(query.Id, default);
+        var actionResult = await _sut.Get(query.Id, default);
+        var okObjectResult = (OkObjectResult)actionResult.Result!;
 
         // Assert
         await _mediator.Received(1).Send(Arg.Is<GetFoodQuery>(q => q.Id == query.Id));
-        result.StatusCode.Should().Be(200);
-        result.Value.Should().BeEquivalentTo(expectedResponse);
+        okObjectResult.Value.Should().BeEquivalentTo(expectedResponse);
+        okObjectResult.StatusCode.Should().Be(200);
     }
 
     [Fact]
@@ -58,10 +59,13 @@ public class GetTests
         _mediator.Send(Arg.Is<GetFoodQuery>(q => q.Id == query.Id)).Returns(Result.NotFound());
 
         // Act
-        var result = (NotFoundResult)await _sut.Get(query.Id, default);
+        var actionResult = await _sut.Get(query.Id, default);
+        var notFoundResult = (NotFoundResult)actionResult.Result!;
 
         // Assert
         await _mediator.Received(1).Send(Arg.Is<GetFoodQuery>(q => q.Id == query.Id));
-        result.StatusCode.Should().Be(404);
+        notFoundResult.Should().NotBeNull();
+        notFoundResult.StatusCode.Should().Be(404);
+        
     }
 }

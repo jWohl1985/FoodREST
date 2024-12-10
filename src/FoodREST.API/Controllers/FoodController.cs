@@ -6,6 +6,7 @@ using FoodREST.API.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using FoodREST.API.Responses;
 
 namespace FoodREST.API.Controllers;
 
@@ -22,7 +23,9 @@ public class FoodController : ControllerBase
     }
 
     [HttpPost(ApiEndpoints.Foods.Create)]
-    public async Task<IActionResult> Create([FromBody]CreateFoodRequest request, CancellationToken token)
+    [ProducesResponseType(typeof(ObjectResult), 500)]
+    [ProducesResponseType(typeof(OkObjectResult), 200)]
+    public async Task<ActionResult<FoodResponse>> Create([FromBody]CreateFoodRequest request, CancellationToken token)
     {
         var command = new CreateFoodCommand(
             name: request.Name,
@@ -42,7 +45,9 @@ public class FoodController : ControllerBase
 
     [HttpGet(ApiEndpoints.Foods.Get)]
     [OutputCache(PolicyName = OutputCachePolicies.FoodCachePolicy)]
-    public async Task<IActionResult> Get([FromRoute]Guid id, CancellationToken token)
+    [ProducesResponseType(typeof(OkObjectResult), 200)]
+    [ProducesResponseType(typeof(NotFoundResult), 404)]
+    public async Task<ActionResult<FoodResponse>> Get([FromRoute]Guid id, CancellationToken token)
     {
         var query = new GetFoodQuery() { Id = id };
 
@@ -55,7 +60,8 @@ public class FoodController : ControllerBase
 
     [HttpGet(ApiEndpoints.Foods.GetAll)]
     [OutputCache(PolicyName = OutputCachePolicies.FoodCachePolicy)]
-    public async Task<IActionResult> GetAll([FromQuery]GetAllFoodsRequest request, CancellationToken token)
+    [ProducesResponseType(typeof(OkObjectResult), 200)]
+    public async Task<ActionResult<FoodsResponse>> GetAll([FromQuery]GetAllFoodsRequest request, CancellationToken token)
     {
         var query = new GetAllFoodsQuery() { Options = request.MapToOptions() };
 
@@ -67,7 +73,9 @@ public class FoodController : ControllerBase
     }
 
     [HttpPut(ApiEndpoints.Foods.Update)]
-    public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]UpdateFoodRequest request, CancellationToken token)
+    [ProducesResponseType(typeof(NotFoundResult), 404)]
+    [ProducesResponseType(typeof(OkObjectResult), 200)]
+    public async Task<ActionResult<FoodResponse>> Update([FromRoute]Guid id, [FromBody]UpdateFoodRequest request, CancellationToken token)
     {
         var command = new UpdateFoodCommand(id, 
             request.Name, 
@@ -88,7 +96,9 @@ public class FoodController : ControllerBase
     }
 
     [HttpDelete(ApiEndpoints.Foods.Delete)]
-    public async Task<IActionResult> Delete([FromRoute]Guid id, CancellationToken token)
+    [ProducesResponseType(typeof(NotFoundResult), 404)]
+    [ProducesResponseType(typeof(OkResult), 200)]
+    public async Task<ActionResult<OkResult>> Delete([FromRoute]Guid id, CancellationToken token)
     {
         var command = new DeleteFoodCommand() { Id = id };
 
